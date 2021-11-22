@@ -52,12 +52,12 @@ class MyModel extends GeneratorCommand
         }
 
         if ($this->option('view')) {
-            $this->call('mycrud:view', array_filter([
+            $this->call('crud:view', array_filter([
                 'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
             ]));
         }
         if ($this->option('viewresource') || $this->option('resource')) {
-            $this->call('mycrud:view', array_filter([
+            $this->call('crud:view', array_filter([
                 'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
                 '--resource' => true,
             ]));
@@ -90,7 +90,7 @@ class MyModel extends GeneratorCommand
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
-        $this->call('mycrud:controller', array_filter([
+        $this->call('crud:controller', array_filter([
             'name' => "{$controller}Controller",
             '--model' => $this->option('resource') || $this->option('api') ? $modelName : null,
             '--api' => $this->option('api'),
