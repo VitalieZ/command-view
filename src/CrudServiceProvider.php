@@ -3,6 +3,7 @@
 namespace Viro\Crud;
 
 use Carbon\Laravel\ServiceProvider;
+use Viro\Crud\Facades\MyModel as MyModelFacade;
 
 class CrudServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,6 @@ class CrudServiceProvider extends ServiceProvider
 
     public function registerfacades()
     {
-        $this->app->singleton('mymodel', MyModel::class);
+        $this->app->singleton('mymodel', MyModelFacade::class);
     }
 }

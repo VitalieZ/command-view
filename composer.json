@@ -19,7 +19,10 @@
         "laravel": {
             "providers": [
                 "Viro\\Crud\\CrudServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "MyModel": "Viro\\Crud\\Facades\\MyModel"
+            }
         }
     }
 }

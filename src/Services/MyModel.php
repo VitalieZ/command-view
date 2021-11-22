@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Crud;
+namespace Viro\Crud\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
