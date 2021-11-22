@@ -2,15 +2,12 @@
 
 namespace Viro\Crud\Commands;
 
-use Illuminate\Console\Concerns\CreatesMatchingTest;
 use Illuminate\Console\GeneratorCommand;
 use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputOption;
 
 class MyController extends GeneratorCommand
 {
-    use CreatesMatchingTest;
-
     /**
      * The console command name.
      *
@@ -125,8 +122,8 @@ class MyController extends GeneratorCommand
     {
         $path = $this->option('path');
         return [
-            '{{ pathView }}' => $path,
-            '{{pathView}}' => $path,
+            '{{ pathView }}' => $path ?? 'main',
+            '{{pathView}}' => $path ?? 'main',
         ];
     }
 
@@ -174,6 +171,8 @@ class MyController extends GeneratorCommand
             }
         }
 
+        $replace = $this->buildFormRequestReplacements($replace, $modelClass);
+
         return array_merge($replace, [
             'DummyFullModelClass' => $modelClass,
             '{{ namespacedModel }}' => $modelClass,
@@ -184,8 +183,8 @@ class MyController extends GeneratorCommand
             'DummyModelVariable' => lcfirst(class_basename($modelClass)),
             '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
             '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
-            '{{ pathView }}' => $this->option('path'),
-            '{{pathView}}' => $this->option('path'),
+            '{{ pathView }}' => mb_strtolower(class_basename($modelClass)),
+            '{{pathView}}' => mb_strtolower(class_basename($modelClass)),
         ]);
     }
 
@@ -207,6 +206,74 @@ class MyController extends GeneratorCommand
     }
 
     /**
+     * Build the model replacement values.
+     *
+     * @param  array  $replace
+     * @param  string  $modelClass
+     * @return array
+     */
+    protected function buildFormRequestReplacements(array $replace, $modelClass)
+    {
+        [$namespace, $storeRequestClass, $updateRequestClass] = [
+            'Illuminate\\Http', 'Request', 'Request',
+        ];
+
+        if ($this->option('requests')) {
+            $namespace = 'App\\Http\\Requests';
+
+            [$storeRequestClass, $updateRequestClass] = $this->generateFormRequests(
+                $modelClass,
+                $storeRequestClass,
+                $updateRequestClass
+            );
+        }
+
+        $namespacedRequests = $namespace . '\\' . $storeRequestClass . ';';
+
+        if ($storeRequestClass !== $updateRequestClass) {
+            $namespacedRequests .= PHP_EOL . 'use ' . $namespace . '\\' . $updateRequestClass . ';';
+        }
+
+        return array_merge($replace, [
+            '{{ storeRequest }}' => $storeRequestClass,
+            '{{storeRequest}}' => $storeRequestClass,
+            '{{ updateRequest }}' => $updateRequestClass,
+            '{{updateRequest}}' => $updateRequestClass,
+            '{{ namespacedStoreRequest }}' => $namespace . '\\' . $storeRequestClass,
+            '{{namespacedStoreRequest}}' => $namespace . '\\' . $storeRequestClass,
+            '{{ namespacedUpdateRequest }}' => $namespace . '\\' . $updateRequestClass,
+            '{{namespacedUpdateRequest}}' => $namespace . '\\' . $updateRequestClass,
+            '{{ namespacedRequests }}' => $namespacedRequests,
+            '{{namespacedRequests}}' => $namespacedRequests,
+        ]);
+    }
+
+    /**
+     * Generate the form requests for the given model and classes.
+     *
+     * @param  string  $modelName
+     * @param  string  $storeRequestClass
+     * @param  string  $updateRequestClass
+     * @return array
+     */
+    protected function generateFormRequests($modelClass, $storeRequestClass, $updateRequestClass)
+    {
+        $storeRequestClass = 'Store' . class_basename($modelClass) . 'Request';
+
+        $this->call('make:request', [
+            'name' => $storeRequestClass,
+        ]);
+
+        $updateRequestClass = 'Update' . class_basename($modelClass) . 'Request';
+
+        $this->call('make:request', [
+            'name' => $updateRequestClass,
+        ]);
+
+        return [$storeRequestClass, $updateRequestClass];
+    }
+
+    /**
      * Get the console command options.
      *
      * @return array
@@ -220,8 +287,9 @@ class MyController extends GeneratorCommand
             ['invokable', 'i', InputOption::VALUE_NONE, 'Generate a single method, invokable controller class.'],
             ['model', 'm', InputOption::VALUE_OPTIONAL, 'Generate a resource controller for the given model.'],
             ['parent', 'p', InputOption::VALUE_OPTIONAL, 'Generate a nested resource controller class.'],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'Generate a nested resource controller class.'],
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller class.'],
+            ['requests', 'R', InputOption::VALUE_NONE, 'Generate FormRequest classes for store and update.'],
+            ['path', null, InputOption::VALUE_OPTIONAL, 'Generate a nested resource controller class.'],
         ];
     }
 }
