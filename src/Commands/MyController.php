@@ -104,8 +104,6 @@ class MyController extends GeneratorCommand
 
         if ($this->option('parent')) {
             $replace = $this->buildParentReplacements();
-        } else {
-            $replace = $this->buildMainParameter();
         }
 
         if ($this->option('model')) {
