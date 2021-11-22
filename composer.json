@@ -1,0 +1,25 @@
+{
+    "name": "viro/crud",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitalie",
+            "email": "test@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Viro\\Crud\\": "src/" 
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Viro\\CrudServiceProvider"
+            ]
+        }
+    }
+}
