@@ -18,7 +18,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Viro\\CrudServiceProvider"
+                "Viro\\Crud\\CrudServiceProvider"
             ]
         }
     }
