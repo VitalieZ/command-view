@@ -54,13 +54,13 @@ class MyModel extends GeneratorCommand
         if ($this->option('view')) {
             $this->call('crud:view', array_filter([
                 'name' => $this->option('viewname') ? $this->option('viewname') : 'resource',
-                'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
+                '--path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
             ]));
         }
         if ($this->option('viewresource') || $this->option('resource')) {
             $this->call('crud:view', array_filter([
                 'name' => 'resource',
-                'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
+                '--path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
                 '--resource' => true,
             ]));
         }

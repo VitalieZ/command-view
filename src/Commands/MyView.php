@@ -14,7 +14,7 @@ class MyView extends GeneratorCommand
      */
     protected $signature = 'crud:view 
                 {name : The name of the view ex: `product`}            
-                {path? : The name of the path view ex: `users`},
+                {--path= : The name of the path view ex: `users`},
                 {--resource : Resource views index,create,show,edit ex: `--resource`}
                 {--extends= : Extends blade ex: `--extends=layouts.app`}
                 {--section= : Section ex: `--section=content`}';
@@ -33,7 +33,7 @@ class MyView extends GeneratorCommand
      */
     public function handle()
     {
-        if ($this->argument('name') || $this->argument('path')) {
+        if ($this->argument('name') || $this->option('path')) {
             $this->writeView();
         }
     }
@@ -45,7 +45,7 @@ class MyView extends GeneratorCommand
      */
     protected function getView()
     {
-        $path = str_replace('\\', '/', $this->argument('path') ?? '/');
+        $path = str_replace('\\', '/', $this->option('path') ?? '/');
 
         return collect(explode('/', $path))
             ->map(function ($part) {
@@ -119,14 +119,12 @@ class MyView extends GeneratorCommand
     public function pathResources()
     {
         if ($this->option('resource')) {
-            if ($this->argument('path')) {
-                $files = ['index', 'create', 'edit', 'show'];
-                $path = array();
-                foreach ($files as $file) {
-                    $path[] = $this->viewPath(
-                        str_replace('.', '/', $this->getView() . '.' . $file) . '.blade.php'
-                    );
-                }
+            $files = ['index', 'create', 'edit', 'show'];
+            $path = array();
+            foreach ($files as $file) {
+                $path[] = $this->viewPath(
+                    str_replace('.', '/', $this->getView() . '.' . $file) . '.blade.php'
+                );
             }
         } else {
             if ($this->argument('name') and $this->argument('name') != 'resource') {

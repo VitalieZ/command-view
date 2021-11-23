@@ -19,6 +19,9 @@ $ php artisan crud:view index
 # Create a view 'index.blade.php' in a subdirectory ('pages')
 $ php artisan crud:view index --path=pages
 
+# Create a view resources 'index, create, edit, show' in a subdirectory ('pages')
+$ php artisan crud:view index --path=pages --resource
+
 # Create a view 'index.blade.php' with extends ('layouts.main') in the default is 'layouts.app'
 $ php artisan crud:view index --extends=layouts.main
 
