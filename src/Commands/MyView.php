@@ -13,7 +13,8 @@ class MyView extends GeneratorCommand
      * @var string
      */
     protected $signature = 'crud:view 
-                {path : The name of the path view ex: `users`},
+                {name : The name of the view ex: `product`}            
+                {path? : The name of the path view ex: `users`},
                 {--resource : Resource views index,create,show,edit ex: `--resource`}
                 {--extends= : Extends blade ex: `--extends=layouts.app`}
                 {--section= : Section ex: `--section=content`}';
@@ -32,7 +33,7 @@ class MyView extends GeneratorCommand
      */
     public function handle()
     {
-        if ($this->argument('path')) {
+        if ($this->argument('name') || $this->argument('path')) {
             $this->writeView();
         }
     }
@@ -44,7 +45,7 @@ class MyView extends GeneratorCommand
      */
     protected function getView()
     {
-        $path = str_replace('\\', '/', $this->argument('path'));
+        $path = str_replace('\\', '/', $this->argument('path') ?? '/');
 
         return collect(explode('/', $path))
             ->map(function ($part) {
@@ -128,9 +129,15 @@ class MyView extends GeneratorCommand
                 }
             }
         } else {
-            $path = $this->viewPath(
-                str_replace('.', '/', $this->getView() . '.index') . '.blade.php'
-            );
+            if ($this->argument('name') and $this->argument('name') != 'resource') {
+                $path = $this->viewPath(
+                    str_replace('.', '/', $this->getView() . '.' . $this->argument('name')) . '.blade.php'
+                );
+            } else {
+                $path = $this->viewPath(
+                    str_replace('.', '/', $this->getView() . '.index') . '.blade.php'
+                );
+            }
         }
         return $path;
     }

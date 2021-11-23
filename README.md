@@ -35,6 +35,15 @@ $ php artisan crud:model Post
 # Create a model 'Post' with name table db 'products'
 $ php artisan crud:model Post --table=products
 
+# Create a model 'Post' and view 'products'
+$ php artisan crud:model Post -w --viewname=products
+
+# Create a model 'Post' with view 'products'
+$ php artisan crud:model Post -w --viewname=products
+
+# Create a model 'Post' with view 'products' and in a subdirectory 'products'
+$ php artisan crud:model Post -w --viewname=products --path=products
+
 # Create a model 'Post' and controller
 $ php artisan crud:model Post -c
 

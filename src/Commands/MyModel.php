@@ -53,11 +53,13 @@ class MyModel extends GeneratorCommand
 
         if ($this->option('view')) {
             $this->call('crud:view', array_filter([
+                'name' => $this->option('viewname') ? $this->option('viewname') : 'resource',
                 'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
             ]));
         }
         if ($this->option('viewresource') || $this->option('resource')) {
             $this->call('crud:view', array_filter([
+                'name' => 'resource',
                 'path' => $this->option('viewPath') ? $this->option('viewPath') : $this->getView(),
                 '--resource' => true,
             ]));
@@ -169,7 +171,8 @@ class MyModel extends GeneratorCommand
             ['controller', 'c', InputOption::VALUE_NONE, 'Create a new controller for the model'],
             ['view', 'w', InputOption::VALUE_NONE, 'Create a new view for the model, you can use -w'],
             ['viewresource', 'W', InputOption::VALUE_NONE, 'Indicates if the generated views should be a resource'],
-            ['viewPath', null, InputOption::VALUE_OPTIONAL, 'Indicates a path view controller class.'],
+            ['viewPath', null, InputOption::VALUE_OPTIONAL, 'Indicates a path view.'],
+            ['viewname', null, InputOption::VALUE_OPTIONAL, 'Indicates view name.'],
             ['pivot', 'p', InputOption::VALUE_NONE, 'Indicates if the generated model should be a custom intermediate table model'],
             ['api', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be an API controller'],
             ['resource', 'r', InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
